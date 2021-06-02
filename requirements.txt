@@ -1,0 +1,7 @@
+wheel
+open3d
+tqdm
+numpy
+setuptools
+pygltflib
+DracoPy

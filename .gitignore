@@ -1,0 +1,6 @@
+*.obj
+venv
+*.pyc
+.idea
+volumesh.egg-info
+demo

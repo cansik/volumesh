@@ -35,4 +35,5 @@ optional arguments:
 
 ## About
 Copyright (c) 2021 Zurich University of the Arts ZHdK
+
 ![ZHdK Logo](https://lh4.googleusercontent.com/-7NafHJ8zrlE/AAAAAAAAAAI/AAAAAAAAAAA/x4MYabXKMVQ/s88-p-k-no-ns-nd/photo.jpg)

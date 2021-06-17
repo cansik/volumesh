@@ -20,7 +20,9 @@ def main():
     args = parse_arguments()
 
     # create output folder
-    os.makedirs(os.path.dirname(os.path.realpath(args.output)))
+    output_dir = os.path.dirname(os.path.realpath(args.output))
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     # load meshes
     files = get_meshes_in_path(args.input)

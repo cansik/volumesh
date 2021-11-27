@@ -63,7 +63,7 @@ class GLTFMeshSequence:
             self._add_data(points, triangles)
             return
 
-        # compression parte
+        # compression parts
         if DRACO_EXTENSION not in self.gltf.extensionsUsed:
             self.gltf.extensionsUsed.append(DRACO_EXTENSION)
 

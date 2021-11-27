@@ -1,8 +1,6 @@
 import os
-import time
 
 import numpy as np
-import open3d as o3d
 import pygltflib as pygltflib
 from open3d.cpu.pybind.geometry import TriangleMesh
 from tqdm import tqdm
@@ -16,7 +14,7 @@ def create_volumesh(meshes: [TriangleMesh], names: [str] = None, compressed: boo
     if names is None:
         names = [str(i) for i in range(meshes)]
 
-    with tqdm(desc="gltf sequence", total=len(meshes)) as prog:
+    with tqdm(desc="volumesh", total=len(meshes)) as prog:
         for i, mesh in enumerate(meshes):
             name = os.path.basename(names[i])
 

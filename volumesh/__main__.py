@@ -13,6 +13,7 @@ def parse_arguments():
     a.add_argument("output", help="GLTF output file (file).")
     a.add_argument("--compressed", action='store_true', help="Compress the mesh data.")
     args = a.parse_args()
+    args.output = os.path.abspath(args.output)
     return args
 
 
@@ -27,7 +28,7 @@ def main():
     # load meshes
     files = get_meshes_in_path(args.input)
     names = [os.path.splitext(file)[0] for file in files]
-    meshes = load_meshes_fast(files)
+    meshes = load_meshes_fast(files, post_processing=True)
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed)

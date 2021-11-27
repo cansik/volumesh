@@ -8,7 +8,10 @@ from tqdm import tqdm
 from volumesh.GLTFMeshSequence import GLTFMeshSequence
 
 
-def create_volumesh(meshes: [TriangleMesh], names: [str] = None, compressed: bool = False) -> pygltflib.GLTF2:
+def create_volumesh(meshes: [TriangleMesh],
+                    names: [str] = None,
+                    compressed: bool = False,
+                    jpeg_textures: bool = False) -> pygltflib.GLTF2:
     sequence = GLTFMeshSequence()
 
     if names is None:
@@ -34,7 +37,7 @@ def create_volumesh(meshes: [TriangleMesh], names: [str] = None, compressed: boo
             texture = textures[0] if len(textures) > 0 else None
 
             sequence.append_mesh(points, triangles, colors, normals, vertex_uvs, texture,
-                                 name=name, compressed=compressed)
+                                 name=name, compressed=compressed, jpeg_textures=jpeg_textures)
             prog.update()
 
     gltf = sequence.pack()

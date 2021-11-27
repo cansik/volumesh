@@ -41,7 +41,9 @@ class GLTFMeshSequence:
                     normals: Optional[np.ndarray] = None,
                     vertex_uvs: Optional[np.ndarray] = None,
                     texture: Optional[np.ndarray] = None,
-                    name: str = None, compressed: bool = False):
+                    name: str = None,
+                    compressed: bool = False,
+                    jpeg_textures: bool = False):
         """
         Adds a mesh to the GLTF Sequence.
         :param points: Float32 Numpy Array (n, 3)
@@ -52,6 +54,7 @@ class GLTFMeshSequence:
         :param texture: Optional UInt32 Numpy Array (u, v, 3)
         :param name: Optional name for the mesh
         :param compressed: Compress the mesh data before adding to the buffer
+        :param jpeg_textures: Use JPEG compression for textures, otherwise PNG
         :return: None
         """
 
@@ -127,14 +130,16 @@ class GLTFMeshSequence:
                 self._add_vector_data(vertex_uvs, type=pygltflib.VEC2)
 
             if texture is not None:
+                texture_encoding = "JPEG" if jpeg_textures else "PNG"
+
                 # add image data
                 # todo: create buffer view for it and append to buffer
                 # todo: check power of 2 for texture dimension => already during creation
                 texture_id = len(self.gltf.textures)
                 pil_image = PIL.Image.fromarray(texture).convert('RGB')
                 image = pygltflib.Image()
-                image.uri = pil_to_data_uri(pil_image, "PNG")
-                image.name = f"tex_{texture_id:05d}.png"
+                image.uri = pil_to_data_uri(pil_image, texture_encoding)
+                image.name = f"tex_{texture_id:05d}.{texture_encoding.lower()}"
                 self.gltf.images.append(image)
 
                 # add sampler

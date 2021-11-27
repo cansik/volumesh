@@ -12,6 +12,7 @@ def parse_arguments():
     a.add_argument("input", help="Path to the mesh files (directory).")
     a.add_argument("output", help="GLTF output file (file).")
     a.add_argument("--compressed", action='store_true', help="Compress the mesh data.")
+    a.add_argument("--jpeg-textures", action='store_true', help="Use JPEG compression for textures instead of PNG.")
     args = a.parse_args()
     args.output = os.path.abspath(args.output)
     return args
@@ -31,7 +32,7 @@ def main():
     meshes = load_meshes_fast(files, post_processing=True)
 
     # create gltf
-    gltf = create_volumesh(meshes, names, compressed=args.compressed)
+    gltf = create_volumesh(meshes, names, compressed=args.compressed, jpeg_textures=args.jpeg_textures)
     print("saving glb...")
     gltf.save_binary(args.output)
 

@@ -31,7 +31,7 @@ class GLTFMeshSequence:
 
         return self.gltf
 
-    def append_mesh(self, points: np.array, triangles: np.array, colors: np.ndarray,
+    def append_mesh(self, points: np.array, triangles: np.array, colors: Optional[np.ndarray],
                     name: str = None, compressed: bool = False):
         """
         Adds a mesh to the GLTF Sequence.
@@ -57,12 +57,12 @@ class GLTFMeshSequence:
         # create mesh
         accessor_indices_index = len(self.gltf.accessors)
         accessor_position_index = accessor_indices_index + 1
-        accessor_color_index = accessor_position_index + 1
 
-        primitive = pygltflib.Primitive(attributes=pygltflib.Attributes(
-            POSITION=accessor_position_index,
-            COLOR_0=accessor_color_index
-        ), indices=accessor_indices_index)
+        attributes = pygltflib.Attributes(
+            POSITION=accessor_position_index
+        )
+
+        primitive = pygltflib.Primitive(attributes=attributes, indices=accessor_indices_index)
         mesh = pygltflib.Mesh(primitives=[primitive])
         self.gltf.meshes.append(mesh)
 
@@ -88,7 +88,10 @@ class GLTFMeshSequence:
         else:
             self._add_triangle_indices(triangles)
             self._add_vector3_data(points)
-            self._add_vector3_data(colors)
+
+            if colors is not None:
+                attributes.COLOR_0 = len(self.gltf.accessors)
+                self._add_vector3_data(colors)
 
     def _add_triangle_indices(self, triangles: np.array):
         # convert data

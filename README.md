@@ -17,6 +17,9 @@ volumesh ./human test.glb --compressed
 
 First specify the folder where the OBJ's are located (`human`) and then the output file (`test.glb`). Use the compressed flag if you want to compress the container (recommended).
 
+### Limitations
+If draco compression is turned on, only **vertex** and **triangle** information is stored into the mesh.
+
 ### Help
 
 ```bash

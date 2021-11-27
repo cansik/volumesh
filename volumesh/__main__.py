@@ -32,6 +32,7 @@ def main():
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed)
+    print("saving glb...")
     gltf.save_binary(args.output)
 
 

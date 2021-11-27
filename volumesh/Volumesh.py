@@ -30,7 +30,10 @@ def create_volumesh(meshes: [TriangleMesh], names: [str] = None, compressed: boo
             triangle_uvs = np.float32(np.asarray(mesh.triangle_uvs))
             vertex_uvs = _calculate_vertex_uvs(triangles, triangle_uvs)
 
-            sequence.append_mesh(points, triangles, colors, normals, vertex_uvs,
+            textures = [np.asarray(tex) for tex in mesh.textures if not tex.is_empty()]
+            texture = textures[0] if len(textures) > 0 else None
+
+            sequence.append_mesh(points, triangles, colors, normals, vertex_uvs, texture,
                                  name=name, compressed=compressed)
             prog.update()
 

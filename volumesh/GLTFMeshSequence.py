@@ -1,8 +1,11 @@
 from typing import Optional
 
 import DracoPy
+import PIL
 import numpy as np
 import pygltflib
+
+from volumesh.utils import pil_to_data_uri
 
 DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
@@ -36,8 +39,8 @@ class GLTFMeshSequence:
                     triangles: np.array,
                     colors: Optional[np.ndarray] = None,
                     normals: Optional[np.ndarray] = None,
-                    vertex_uvs: Optional[np.ndarray] =  None,
-                    texture: Optional[str] = None,
+                    vertex_uvs: Optional[np.ndarray] = None,
+                    texture: Optional[np.ndarray] = None,
                     name: str = None, compressed: bool = False):
         """
         Adds a mesh to the GLTF Sequence.
@@ -45,6 +48,8 @@ class GLTFMeshSequence:
         :param triangles: UInt32 Numpy Array (n, 3)
         :param colors: Optional Float32 Numpy Array (n, 3)
         :param normals: Optional Float32 Numpy Array (n, 3)
+        :param vertex_uvs: Optional Float32 Numpy Array (n, 3)
+        :param texture: Optional UInt32 Numpy Array (u, v, 3)
         :param name: Optional name for the mesh
         :param compressed: Compress the mesh data before adding to the buffer
         :return: None
@@ -108,6 +113,28 @@ class GLTFMeshSequence:
             if vertex_uvs is not None:
                 attributes.TEXCOORD_0 = len(self.gltf.accessors)
                 self._add_vector_data(vertex_uvs, type=pygltflib.VEC2)
+
+            if texture is not None:
+                # add image data
+                # todo: create buffer view for it and append to buffer
+                # todo: check power of 2 for texture dimension => already during creation
+                image_id = len(self.gltf.textures)
+                pil_image = PIL.Image.fromarray(texture).convert('RGB')
+                image = pygltflib.Image()
+                image.uri = pil_to_data_uri(pil_image, "PNG")
+                image.name = f"tex_{image_id:05d}.png"
+                self.gltf.images.append(image)
+
+                # add sampler
+                # todo: maybe only one sampler is needed for volumesh
+                self.gltf.samplers.append(pygltflib.Sampler())
+
+                # add texture
+                self.gltf.textures.append(pygltflib.Texture(source=image_id, sampler=image_id))
+
+            if vertex_uvs is not None and texture is not None:
+                # add material
+                pass
 
     def _add_triangle_indices(self, triangles: np.array):
         # convert data

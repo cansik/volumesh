@@ -86,33 +86,12 @@ class GLTFMeshSequence:
 
             self._add_data_compressed(points, triangles)
         else:
-            self._add_data(points, triangles)
+            self._add_triangle_indices(triangles)
+            self._add_vector3_data(points)
+            self._add_vector3_data(colors)
 
-            # add color information (always uncompressed)
-            colors_binary_blob = colors.tobytes()
-            self.gltf.accessors.append(
-                pygltflib.Accessor(
-                    bufferView=len(self.gltf.bufferViews),
-                    componentType=pygltflib.FLOAT,
-                    count=len(colors),
-                    type=pygltflib.VEC3,
-                    max=colors.max(axis=0).tolist(),
-                    min=colors.min(axis=0).tolist(),
-                )
-            )
-            self.gltf.bufferViews.append(
-                pygltflib.BufferView(
-                    buffer=0,
-                    byteOffset=len(self.data),
-                    byteLength=len(colors_binary_blob),
-                    target=pygltflib.ARRAY_BUFFER,
-                )
-            )
-            self.data += colors_binary_blob
-
-    def _add_data(self, points: np.array, triangles: np.array):
+    def _add_triangle_indices(self, triangles: np.array):
         # convert data
-        points_binary_blob = points.tobytes()
         triangles_binary_blob = triangles.flatten().tobytes()
 
         # triangles
@@ -136,26 +115,27 @@ class GLTFMeshSequence:
         )
         self.data += triangles_binary_blob
 
-        # points
+    def _add_vector3_data(self, array: np.ndarray, component_type: int = pygltflib.FLOAT):
+        array_blob = array.tobytes()
         self.gltf.accessors.append(
             pygltflib.Accessor(
                 bufferView=len(self.gltf.bufferViews),
-                componentType=pygltflib.FLOAT,
-                count=len(points),
+                componentType=component_type,
+                count=len(array),
                 type=pygltflib.VEC3,
-                max=points.max(axis=0).tolist(),
-                min=points.min(axis=0).tolist(),
+                max=array.max(axis=0).tolist(),
+                min=array.min(axis=0).tolist(),
             )
         )
         self.gltf.bufferViews.append(
             pygltflib.BufferView(
                 buffer=0,
                 byteOffset=len(self.data),
-                byteLength=len(points_binary_blob),
+                byteLength=len(array_blob),
                 target=pygltflib.ARRAY_BUFFER,
             )
         )
-        self.data += points_binary_blob
+        self.data += array_blob
 
     def _add_data_compressed(self, points: np.array, triangles: np.array):
         # encode data

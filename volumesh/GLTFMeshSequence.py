@@ -1,3 +1,5 @@
+from typing import Optional
+
 import DracoPy
 import numpy as np
 import pygltflib
@@ -29,11 +31,13 @@ class GLTFMeshSequence:
 
         return self.gltf
 
-    def append_mesh(self, points: np.array, triangles: np.array, name: str = None, compressed: bool = False):
+    def append_mesh(self, points: np.array, triangles: np.array, colors: np.ndarray,
+                    name: str = None, compressed: bool = False):
         """
         Adds a mesh to the GLTF Sequence.
         :param points: Float32 Numpy Array (n, 3)
         :param triangles: UInt32 Numpy Array (n, 3)
+        :param colors: Optional Float32 Numpy Array (n, 3)
         :param name: Optional name for the mesh
         :param compressed: Compress the mesh data before adding to the buffer
         :return: None
@@ -53,34 +57,58 @@ class GLTFMeshSequence:
         # create mesh
         accessor_indices_index = len(self.gltf.accessors)
         accessor_position_index = accessor_indices_index + 1
+        accessor_color_index = accessor_position_index + 1
 
         primitive = pygltflib.Primitive(attributes=pygltflib.Attributes(
-            POSITION=accessor_position_index), indices=accessor_indices_index)
+            POSITION=accessor_position_index,
+            COLOR_0=accessor_color_index
+        ), indices=accessor_indices_index)
         mesh = pygltflib.Mesh(primitives=[primitive])
         self.gltf.meshes.append(mesh)
 
-        if not compressed:
-            self._add_data(points, triangles)
-            return
+        if compressed:
+            # compression parts
+            if DRACO_EXTENSION not in self.gltf.extensionsUsed:
+                self.gltf.extensionsUsed.append(DRACO_EXTENSION)
 
-        # compression parts
-        if DRACO_EXTENSION not in self.gltf.extensionsUsed:
-            self.gltf.extensionsUsed.append(DRACO_EXTENSION)
+            if DRACO_EXTENSION not in self.gltf.extensionsRequired:
+                self.gltf.extensionsRequired.append(DRACO_EXTENSION)
 
-        if DRACO_EXTENSION not in self.gltf.extensionsRequired:
-            self.gltf.extensionsRequired.append(DRACO_EXTENSION)
-
-        # add extension information
-        primitive.extensions.update({
-            DRACO_EXTENSION: {
-                "bufferView": len(self.gltf.bufferViews),
-                "attributes": {
-                    "POSITION": 0,
+            # add extension information
+            primitive.extensions.update({
+                DRACO_EXTENSION: {
+                    "bufferView": len(self.gltf.bufferViews),
+                    "attributes": {
+                        "POSITION": 0,
+                    }
                 }
-            }
-        })
+            })
 
-        self._add_data_compressed(points, triangles)
+            self._add_data_compressed(points, triangles)
+        else:
+            self._add_data(points, triangles)
+
+            # add color information (always uncompressed)
+            colors_binary_blob = colors.tobytes()
+            self.gltf.accessors.append(
+                pygltflib.Accessor(
+                    bufferView=len(self.gltf.bufferViews),
+                    componentType=pygltflib.FLOAT,
+                    count=len(colors),
+                    type=pygltflib.VEC3,
+                    max=colors.max(axis=0).tolist(),
+                    min=colors.min(axis=0).tolist(),
+                )
+            )
+            self.gltf.bufferViews.append(
+                pygltflib.BufferView(
+                    buffer=0,
+                    byteOffset=len(self.data),
+                    byteLength=len(colors_binary_blob),
+                    target=pygltflib.ARRAY_BUFFER,
+                )
+            )
+            self.data += colors_binary_blob
 
     def _add_data(self, points: np.array, triangles: np.array):
         # convert data

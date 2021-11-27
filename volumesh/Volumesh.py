@@ -23,8 +23,9 @@ def create_volumesh(meshes: [TriangleMesh], names: [str] = None, compressed: boo
 
             points = np.float32(points_64)
             triangles = np.uint32(triangles_int32)
+            colors = np.float32(np.asarray(mesh.vertex_colors))
 
-            sequence.append_mesh(points, triangles, name=name, compressed=compressed)
+            sequence.append_mesh(points, triangles, colors, name=name, compressed=compressed)
             prog.update()
 
     gltf = sequence.pack()

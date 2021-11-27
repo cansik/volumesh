@@ -40,7 +40,7 @@ class GLTFMeshSequence:
         """
 
         if name is None:
-            name = "mesh_%d" % len(self.gltf.meshes)
+            name = f"mesh_{len(self.gltf.meshes):05d}"
 
         # create node
         mesh_index = len(self.gltf.meshes)

@@ -31,13 +31,20 @@ class GLTFMeshSequence:
 
         return self.gltf
 
-    def append_mesh(self, points: np.array, triangles: np.array, colors: Optional[np.ndarray],
+    def append_mesh(self,
+                    points: np.array,
+                    triangles: np.array,
+                    colors: Optional[np.ndarray] = None,
+                    normals: Optional[np.ndarray] = None,
+                    vertex_uvs: Optional[np.ndarray] =  None,
+                    texture: Optional[str] = None,
                     name: str = None, compressed: bool = False):
         """
         Adds a mesh to the GLTF Sequence.
         :param points: Float32 Numpy Array (n, 3)
         :param triangles: UInt32 Numpy Array (n, 3)
         :param colors: Optional Float32 Numpy Array (n, 3)
+        :param normals: Optional Float32 Numpy Array (n, 3)
         :param name: Optional name for the mesh
         :param compressed: Compress the mesh data before adding to the buffer
         :return: None
@@ -87,11 +94,20 @@ class GLTFMeshSequence:
             self._add_data_compressed(points, triangles)
         else:
             self._add_triangle_indices(triangles)
-            self._add_vector3_data(points)
+            self._add_vector_data(points)
 
             if colors is not None:
                 attributes.COLOR_0 = len(self.gltf.accessors)
-                self._add_vector3_data(colors)
+                self._add_vector_data(colors)
+
+            if normals is not None:
+                # todo: normalize normals first!
+                attributes.NORMAL = len(self.gltf.accessors)
+                self._add_vector_data(normals)
+
+            if vertex_uvs is not None:
+                attributes.TEXCOORD_0 = len(self.gltf.accessors)
+                self._add_vector_data(vertex_uvs, type=pygltflib.VEC2)
 
     def _add_triangle_indices(self, triangles: np.array):
         # convert data
@@ -118,14 +134,16 @@ class GLTFMeshSequence:
         )
         self.data += triangles_binary_blob
 
-    def _add_vector3_data(self, array: np.ndarray, component_type: int = pygltflib.FLOAT):
+    def _add_vector_data(self, array: np.ndarray,
+                         component_type: int = pygltflib.FLOAT,
+                         type: int = pygltflib.VEC3):
         array_blob = array.tobytes()
         self.gltf.accessors.append(
             pygltflib.Accessor(
                 bufferView=len(self.gltf.bufferViews),
                 componentType=component_type,
                 count=len(array),
-                type=pygltflib.VEC3,
+                type=type,
                 max=array.max(axis=0).tolist(),
                 min=array.min(axis=0).tolist(),
             )

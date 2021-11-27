@@ -78,6 +78,18 @@ class GLTFMeshSequence:
         mesh = pygltflib.Mesh(primitives=[primitive])
         self.gltf.meshes.append(mesh)
 
+        # add material
+        pbr_material = pygltflib.PbrMetallicRoughness(
+            roughnessFactor=1.0,
+            metallicFactor=0.0
+        )
+
+        material_id = len(self.gltf.materials)
+        self.gltf.materials.append(pygltflib.Material(pbrMetallicRoughness=pbr_material))
+
+        # set material
+        primitive.material = material_id
+
         if compressed:
             # compression parts
             if DRACO_EXTENSION not in self.gltf.extensionsUsed:
@@ -133,17 +145,8 @@ class GLTFMeshSequence:
                 self.gltf.textures.append(pygltflib.Texture(source=texture_id, sampler=texture_id))
 
             if vertex_uvs is not None and texture is not None:
-                # add material
-                material_id = len(self.gltf.materials)
-                self.gltf.materials.append(pygltflib.Material(
-                    pbrMetallicRoughness=pygltflib.PbrMetallicRoughness(
-                        baseColorTexture=pygltflib.TextureInfo(index=texture_id),
-                        roughnessFactor=1.0,
-                        metallicFactor=0.0
-                    )))
-
-                # set material
-                primitive.material = material_id
+                # set texture
+                pbr_material.baseColorTexture = pygltflib.TextureInfo(index=texture_id)
 
     def _add_triangle_indices(self, triangles: np.array):
         # convert data

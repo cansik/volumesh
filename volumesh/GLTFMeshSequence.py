@@ -118,11 +118,11 @@ class GLTFMeshSequence:
                 # add image data
                 # todo: create buffer view for it and append to buffer
                 # todo: check power of 2 for texture dimension => already during creation
-                image_id = len(self.gltf.textures)
+                texture_id = len(self.gltf.textures)
                 pil_image = PIL.Image.fromarray(texture).convert('RGB')
                 image = pygltflib.Image()
                 image.uri = pil_to_data_uri(pil_image, "PNG")
-                image.name = f"tex_{image_id:05d}.png"
+                image.name = f"tex_{texture_id:05d}.png"
                 self.gltf.images.append(image)
 
                 # add sampler
@@ -130,11 +130,20 @@ class GLTFMeshSequence:
                 self.gltf.samplers.append(pygltflib.Sampler())
 
                 # add texture
-                self.gltf.textures.append(pygltflib.Texture(source=image_id, sampler=image_id))
+                self.gltf.textures.append(pygltflib.Texture(source=texture_id, sampler=texture_id))
 
             if vertex_uvs is not None and texture is not None:
                 # add material
-                pass
+                material_id = len(self.gltf.materials)
+                self.gltf.materials.append(pygltflib.Material(
+                    pbrMetallicRoughness=pygltflib.PbrMetallicRoughness(
+                        baseColorTexture=pygltflib.TextureInfo(index=texture_id),
+                        roughnessFactor=1.0,
+                        metallicFactor=0.0
+                    )))
+
+                # set material
+                primitive.material = material_id
 
     def _add_triangle_indices(self, triangles: np.array):
         # convert data

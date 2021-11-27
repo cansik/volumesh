@@ -15,10 +15,21 @@ To convert a sequence of OBJ files into a volumesh container use the following c
 volumesh ./human test.glb --compressed
 ```
 
-First specify the folder where the OBJ's are located (`human`) and then the output file (`test.glb`). Use the compressed flag if you want to compress the container (recommended).
+First specify the folder where the OBJ's are located (`human`) and then the output file (`test.glb`). Use the compressed flag if you want to compress the container.
+The following information will be stored into the mesh if available:
+
+* vertices
+* triangle indices
+* normals
+* vertex-uvs
+* textures (PNG format)
 
 ### Limitations
-If draco compression is turned on, only **vertex** and **triangle** information is stored into the mesh.
+If draco compression is turned on, only **vertex** and **triangle** information is stored into the mesh. This is due to the fact that [DracoPy](https://github.com/seung-lab/DracoPy) does only support these two primitive values. At the moment we recommend to not use the internal compression, but convert the sequence into a glb file and later convert it using the [gltf-pipeline](https://github.com/CesiumGS/gltf-pipeline). This leads to way better compression and contains still all information parts:
+
+```
+gltf-pipeline -i .\sequence.glb -o .\sequence-draco.glb -d
+```
 
 ### Help
 

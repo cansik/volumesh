@@ -83,8 +83,8 @@ class GLTFMeshSequence:
 
         # add material
         pbr_material = pygltflib.PbrMetallicRoughness(
-            roughnessFactor=1.0,
-            metallicFactor=0.0
+            roughnessFactor=0.9,
+            metallicFactor=0.1
         )
 
         material_id = len(self.gltf.materials)

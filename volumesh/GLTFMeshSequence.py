@@ -1,7 +1,7 @@
 from typing import Optional
 
 import DracoPy
-import PIL
+import PIL.Image
 import numpy as np
 import pygltflib
 

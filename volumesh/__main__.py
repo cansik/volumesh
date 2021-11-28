@@ -1,6 +1,8 @@
 import argparse
 import os
 
+from tqdm import tqdm
+
 from volumesh.FastGeometryLoader import load_meshes_fast
 from volumesh.Volumesh import create_volumesh
 from volumesh.utils import get_meshes_in_path
@@ -33,8 +35,11 @@ def main():
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed, jpeg_textures=args.jpeg_textures)
-    print("saving glb...")
-    gltf.save_binary(args.output)
+
+    # save to disk
+    with tqdm(desc="saving", total=1) as prog:
+        gltf.save_binary(args.output)
+        prog.update()
 
 
 if __name__ == "__main__":

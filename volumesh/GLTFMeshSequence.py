@@ -129,16 +129,16 @@ class GLTFMeshSequence:
             self._add_triangle_indices(triangles)
             self._add_vector_data(points)
 
-            if colors is not None:
+            if colors is not None and len(colors) > 0:
                 attributes.COLOR_0 = len(self.gltf.accessors)
                 self._add_vector_data(colors)
 
-            if normals is not None:
+            if normals is not None and len(normals) > 0:
                 # todo: normalize normals first!
                 attributes.NORMAL = len(self.gltf.accessors)
                 self._add_vector_data(normals)
 
-            if vertex_uvs is not None:
+            if vertex_uvs is not None and len(vertex_uvs) > 0:
                 attributes.TEXCOORD_0 = len(self.gltf.accessors)
                 self._add_vector_data(vertex_uvs, type=pygltflib.VEC2)
 

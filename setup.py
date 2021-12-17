@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
     name=NAME,
-    version='1.2.0',
+    version='1.2.1',
     packages=required_packages,
     entry_points={
         'console_scripts': [

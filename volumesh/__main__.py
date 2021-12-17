@@ -15,6 +15,8 @@ def parse_arguments():
     a.add_argument("output", help="GLTF output file (file).")
     a.add_argument("--compressed", action='store_true', help="Compress the mesh data.")
     a.add_argument("--jpeg-textures", action='store_true', help="Use JPEG compression for textures instead of PNG.")
+    a.add_argument("--animate", action='store_true', help="Animate mesh frames with GLTF animation system.")
+    a.add_argument("--fps", type=int, default=24, help="Animation frames per second (fps).")
     args = a.parse_args()
     args.output = os.path.abspath(args.output)
     return args
@@ -34,7 +36,8 @@ def main():
     meshes = load_meshes_fast(files, post_processing=True)
 
     # create gltf
-    gltf = create_volumesh(meshes, names, compressed=args.compressed, jpeg_textures=args.jpeg_textures)
+    gltf = create_volumesh(meshes, names, compressed=args.compressed, jpeg_textures=args.jpeg_textures,
+                           animate=args.animate, frame_rate=args.fps)
 
     # save to disk
     with tqdm(desc="saving", total=1) as prog:

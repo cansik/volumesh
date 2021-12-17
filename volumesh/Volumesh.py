@@ -11,8 +11,11 @@ from volumesh.GLTFMeshSequence import GLTFMeshSequence
 def create_volumesh(meshes: [TriangleMesh],
                     names: [str] = None,
                     compressed: bool = False,
-                    jpeg_textures: bool = False) -> pygltflib.GLTF2:
-    sequence = GLTFMeshSequence()
+                    jpeg_textures: bool = False,
+                    animate: bool = False,
+                    frame_rate: int = 24
+                    ) -> pygltflib.GLTF2:
+    sequence = GLTFMeshSequence(animate=animate, frame_rate=frame_rate)
 
     if names is None:
         names = [str(i) for i in range(meshes)]

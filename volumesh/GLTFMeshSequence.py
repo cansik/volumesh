@@ -12,7 +12,7 @@ DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
 class GLTFMeshSequence:
     def __init__(self, scene_name: str = "scene", node_name: str = "sequence",
-                 frame_rate: int = 24, animate: bool = True):
+                 animate: bool = False, frame_rate: int = 24):
         self.sequence_node = pygltflib.Node(name=node_name)
         self.sequence_node.extras.update({
             "frameRate": frame_rate
@@ -279,11 +279,11 @@ class GLTFMeshSequence:
         frame_end = frame_ms * (frame_id + 1) / 1000.0
 
         # create animation data for times (SCALAR) and scale (VEC3)
-        animation_data = np.zeros(shape=(4, 4), dtype="float32")
-        animation_data[0] = [0.0, 0.0, 0.0, 0.0]
-        animation_data[1] = [frame_start, 1.0, 1.0, 1.0]
-        animation_data[2] = [frame_end, 0.0, 0.0, 0.0]
-        animation_data[3] = [1.0, 0.0, 0.0, 0.0]
+        animation_data = np.array([
+            [0.0, 0.0, 0.0, 0.0],
+            [frame_start, 1.0, 1.0, 1.0],
+            [frame_end, 0.0, 0.0, 0.0],
+        ], dtype="float32")
 
         time_key_points = animation_data[:, 0]
         scale_key_points = animation_data[:, 1:]

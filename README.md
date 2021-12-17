@@ -1,10 +1,10 @@
 # Volumesh
-Tool to create volumetric mesh container files.
+Utility to create volumetric mesh container files.
 
 ## Installation
 
 ```
-pip install git+https://github.com/cansik/volumesh.git@1.0.0
+pip install git+https://github.com/cansik/volumesh.git@1.2.0
 ```
 
 ## Usage
@@ -31,20 +31,31 @@ If draco compression is turned on, only **vertex** and **triangle** information 
 gltf-pipeline -i .\sequence.glb -o .\sequence-draco.glb -d
 ```
 
+### Animation
+To use the GLTF animation system to render the meshes in a sequence, it is possible to specify the framerate (default `24`) and set the animation flag.
+
+```
+volumesh ./human test.glb --animate --fps 24
+```
+
 ### Help
 
 ```bash
-usage: volumesh [-h] [--compressed] input output
+usage: volumesh [-h] [--compressed] [--jpeg-textures] [--animate] [--fps FPS]
+                input output
 
 A utility to work with volumesh files.
 
 positional arguments:
-  input         Path to the mesh files (directory).
-  output        GLTF output file (file).
+  input            Path to the mesh files (directory).
+  output           GLTF output file (file).
 
 optional arguments:
-  -h, --help    show this help message and exit
-  --compressed  Compress the mesh data.
+  -h, --help       show this help message and exit
+  --compressed     Compress the mesh data.
+  --jpeg-textures  Use JPEG compression for textures instead of PNG.
+  --animate        Animate mesh frames with GLTF animation system.
+  --fps FPS        Animation frames per second (fps).
 ```
 
 ## About

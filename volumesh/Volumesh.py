@@ -1,5 +1,7 @@
 import os
+from typing import Optional
 
+import cv2
 import numpy as np
 import pygltflib as pygltflib
 from open3d.cpu.pybind.geometry import TriangleMesh
@@ -12,6 +14,7 @@ def create_volumesh(meshes: [TriangleMesh],
                     names: [str] = None,
                     compressed: bool = False,
                     jpeg_textures: bool = False,
+                    texture_size: Optional[int] = None,
                     animate: bool = False,
                     frame_rate: int = 24
                     ) -> pygltflib.GLTF2:
@@ -38,6 +41,10 @@ def create_volumesh(meshes: [TriangleMesh],
 
             textures = [np.asarray(tex) for tex in mesh.textures if not tex.is_empty()]
             texture = textures[0] if len(textures) > 0 else None
+
+            if texture_size is not None:
+                h, w = texture.shape[:2]
+                texture = cv2.resize(texture, (0, 0), fx=texture_size / w, fy=texture_size / w)
 
             sequence.append_mesh(points, triangles, colors, normals, vertex_uvs, texture,
                                  name=name, compressed=compressed, jpeg_textures=jpeg_textures)

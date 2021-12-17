@@ -42,20 +42,23 @@ volumesh ./human test.glb --animate --fps 24
 
 ```bash
 usage: volumesh [-h] [--compressed] [--jpeg-textures] [--animate] [--fps FPS]
+                [-tex TEXTURE_SIZE]
                 input output
 
 A utility to work with volumesh files.
 
 positional arguments:
-  input            Path to the mesh files (directory).
-  output           GLTF output file (file).
+  input                 Path to the mesh files (directory).
+  output                GLTF output file (file).
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --compressed     Compress the mesh data.
-  --jpeg-textures  Use JPEG compression for textures instead of PNG.
-  --animate        Animate mesh frames with GLTF animation system.
-  --fps FPS        Animation frames per second (fps).
+  -h, --help            show this help message and exit
+  --compressed          Compress the mesh data.
+  --jpeg-textures       Use JPEG compression for textures instead of PNG.
+  --animate             Animate mesh frames with GLTF animation system.
+  --fps FPS             Animation frames per second (fps).
+  -tex TEXTURE_SIZE, --texture-size TEXTURE_SIZE
+                        Resize texture to the specified width.
 ```
 
 ## About

@@ -6,3 +6,4 @@ setuptools
 pygltflib
 DracoPy
 Pillow
+opencv-python

@@ -17,6 +17,7 @@ def parse_arguments():
     a.add_argument("--jpeg-textures", action='store_true', help="Use JPEG compression for textures instead of PNG.")
     a.add_argument("--animate", action='store_true', help="Animate mesh frames with GLTF animation system.")
     a.add_argument("--fps", type=int, default=24, help="Animation frames per second (fps).")
+    a.add_argument("-tex", "--texture-size", type=int, default=None, help="Resize texture to the specified width.")
     args = a.parse_args()
     args.output = os.path.abspath(args.output)
     return args
@@ -36,7 +37,8 @@ def main():
     meshes = load_meshes_fast(files, post_processing=True)
 
     # create gltf
-    gltf = create_volumesh(meshes, names, compressed=args.compressed, jpeg_textures=args.jpeg_textures,
+    gltf = create_volumesh(meshes, names, compressed=args.compressed,
+                           jpeg_textures=args.jpeg_textures, texture_size=args.texture_size,
                            animate=args.animate, frame_rate=args.fps)
 
     # save to disk

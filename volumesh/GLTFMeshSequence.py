@@ -12,7 +12,7 @@ DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
 class GLTFMeshSequence:
     def __init__(self, scene_name: str = "scene", node_name: str = "sequence",
-                 frame_rate: int = 24, animate: bool = True):
+                 frame_rate: int = 3, animate: bool = True):
         self.sequence_node = pygltflib.Node(name=node_name)
         self.sequence_node.extras.update({
             "frameRate": frame_rate
@@ -270,8 +270,8 @@ class GLTFMeshSequence:
 
     def _add_frame_rate_animation(self, node_index: int, frame_id: int):
         # calculate times
-        frame_start = 1000.0 / self.frame_rate * frame_id
-        frame_end = 1000.0 / self.frame_rate * (frame_id + 1)
+        frame_start = 1000.0 / self.frame_rate * frame_id / 1000.0
+        frame_end = 1000.0 / self.frame_rate * (frame_id + 1) / 1000.0
 
         # create animation data for times (SCALAR) and scale (VEC3)
         animation_data = np.zeros(shape=(4, 4), dtype="float32")
@@ -280,34 +280,37 @@ class GLTFMeshSequence:
         animation_data[2] = [frame_end, 0.0, 0.0, 0.0]
         animation_data[3] = [1.0, 0.0, 0.0, 0.0]
 
-        key_point_times = animation_data[:, 0]
-        key_point_scales = animation_data[:, 1:]
+        time_key_points = animation_data[:, 0]
+        scale_key_points = animation_data[:, 1:]
 
-        raw_data = np.concatenate((key_point_times.flatten(), key_point_scales.flatten()))
-        blob = raw_data.tobytes()
+        times_blob = time_key_points.flatten().tobytes()
+        scales_blob = scale_key_points.flatten().tobytes()
+        blob = times_blob + scales_blob
 
-        # create accessors
+        # create time accessor
         times_accessor_index = len(self.gltf.accessors)
         self.gltf.accessors.append(
             pygltflib.Accessor(
                 bufferView=len(self.gltf.bufferViews),
                 componentType=pygltflib.FLOAT,
-                count=key_point_times.shape[0],
+                count=time_key_points.shape[0],
                 type=pygltflib.SCALAR,
-                max=[float(key_point_times.max())],
-                min=[float(key_point_times.min())],
+                max=[float(time_key_points.max())],
+                min=[float(time_key_points.min())],
             )
         )
 
+        # create scale accessor
         scales_accessor_index = len(self.gltf.accessors)
         self.gltf.accessors.append(
             pygltflib.Accessor(
                 bufferView=len(self.gltf.bufferViews),
                 componentType=pygltflib.FLOAT,
-                count=len(key_point_scales),
+                count=len(scale_key_points),
                 type=pygltflib.VEC3,
-                max=key_point_scales.max(axis=0).tolist(),
-                min=key_point_scales.min(axis=0).tolist(),
+                max=scale_key_points.max(axis=0).tolist(),
+                min=scale_key_points.min(axis=0).tolist(),
+                byteOffset=len(times_blob)
             )
         )
 
@@ -316,8 +319,7 @@ class GLTFMeshSequence:
             pygltflib.BufferView(
                 buffer=0,
                 byteOffset=len(self.data),
-                byteLength=len(blob),
-                target=pygltflib.ARRAY_BUFFER,
+                byteLength=len(blob)
             )
         )
 

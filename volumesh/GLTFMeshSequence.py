@@ -12,7 +12,7 @@ DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
 class GLTFMeshSequence:
     def __init__(self, scene_name: str = "scene", node_name: str = "sequence",
-                 frame_rate: int = 3, animate: bool = True):
+                 frame_rate: int = 24, animate: bool = True):
         self.sequence_node = pygltflib.Node(name=node_name)
         self.sequence_node.extras.update({
             "frameRate": frame_rate
@@ -28,6 +28,10 @@ class GLTFMeshSequence:
             nodes=[self.sequence_node],
             buffers=[self.buffer]
         )
+
+        self.animation = pygltflib.Animation(name="volumesh")
+        if self.animate:
+            self.gltf.animations.append(self.animation)
 
         self.data: bytearray = bytearray()
 
@@ -270,8 +274,9 @@ class GLTFMeshSequence:
 
     def _add_frame_rate_animation(self, node_index: int, frame_id: int):
         # calculate times
-        frame_start = 1000.0 / self.frame_rate * frame_id / 1000.0
-        frame_end = 1000.0 / self.frame_rate * (frame_id + 1) / 1000.0
+        frame_ms = 1000.0 / self.frame_rate
+        frame_start = frame_ms * frame_id / 1000.0
+        frame_end = frame_ms * (frame_id + 1) / 1000.0
 
         # create animation data for times (SCALAR) and scale (VEC3)
         animation_data = np.zeros(shape=(4, 4), dtype="float32")
@@ -326,24 +331,21 @@ class GLTFMeshSequence:
         self.data += blob
 
         # create animation object
-        self.gltf.animations.append(
-            pygltflib.Animation(
-                name=f"{frame_id}",
-                samplers=[
-                    pygltflib.AnimationSampler(
-                        input=times_accessor_index,
-                        output=scales_accessor_index,
-                        interpolation=pygltflib.ANIM_STEP
-                    )
-                ],
-                channels=[
-                    pygltflib.AnimationChannel(
-                        sampler=0,
-                        target=pygltflib.AnimationChannelTarget(
-                            node=node_index,
-                            path="scale"
-                        )
-                    )
-                ]
+        sampler_index = len(self.animation.samplers)
+        self.animation.samplers.append(
+            pygltflib.AnimationSampler(
+                input=times_accessor_index,
+                output=scales_accessor_index,
+                interpolation=pygltflib.ANIM_STEP
+            )
+        )
+
+        self.animation.channels.append(
+            pygltflib.AnimationChannel(
+                sampler=sampler_index,
+                target=pygltflib.AnimationChannelTarget(
+                    node=node_index,
+                    path="scale"
+                )
             )
         )

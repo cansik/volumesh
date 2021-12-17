@@ -11,11 +11,15 @@ DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
 
 class GLTFMeshSequence:
-    def __init__(self, scene_name: str = "scene", node_name: str = "sequence"):
+    def __init__(self, scene_name: str = "scene", node_name: str = "sequence",
+                 frame_rate: int = 24, animate: bool = True):
         self.sequence_node = pygltflib.Node(name=node_name)
         self.sequence_node.extras.update({
-            "frameRate": 24
+            "frameRate": frame_rate
         })
+
+        self.frame_rate = frame_rate
+        self.animate = animate
 
         self.buffer = pygltflib.Buffer(byteLength=0)
         self.gltf = pygltflib.GLTF2(
@@ -66,8 +70,13 @@ class GLTFMeshSequence:
         node = pygltflib.Node(mesh=mesh_index, name=name)
 
         node_index = len(self.gltf.nodes)
+        frame_index = len(self.sequence_node.children)
         self.gltf.nodes.append(node)
         self.sequence_node.children.append(node_index)
+
+        # add animation
+        if self.animate:
+            self._add_frame_rate_animation(node_index, frame_index)
 
         # create mesh
         accessor_indices_index = len(self.gltf.accessors)
@@ -258,3 +267,81 @@ class GLTFMeshSequence:
         )
 
         self.data += encoded_blob
+
+    def _add_frame_rate_animation(self, node_index: int, frame_id: int):
+        # calculate times
+        frame_start = 1000.0 / self.frame_rate * frame_id
+        frame_end = 1000.0 / self.frame_rate * (frame_id + 1)
+
+        # create animation data for times (SCALAR) and scale (VEC3)
+        animation_data = np.zeros(shape=(4, 4), dtype="float32")
+        animation_data[0] = [0.0, 0.0, 0.0, 0.0]
+        animation_data[1] = [frame_start, 1.0, 1.0, 1.0]
+        animation_data[2] = [frame_end, 0.0, 0.0, 0.0]
+        animation_data[3] = [1.0, 0.0, 0.0, 0.0]
+
+        key_point_times = animation_data[:, 0]
+        key_point_scales = animation_data[:, 1:]
+
+        raw_data = np.concatenate((key_point_times.flatten(), key_point_scales.flatten()))
+        blob = raw_data.tobytes()
+
+        # create accessors
+        times_accessor_index = len(self.gltf.accessors)
+        self.gltf.accessors.append(
+            pygltflib.Accessor(
+                bufferView=len(self.gltf.bufferViews),
+                componentType=pygltflib.FLOAT,
+                count=key_point_times.shape[0],
+                type=pygltflib.SCALAR,
+                max=[float(key_point_times.max())],
+                min=[float(key_point_times.min())],
+            )
+        )
+
+        scales_accessor_index = len(self.gltf.accessors)
+        self.gltf.accessors.append(
+            pygltflib.Accessor(
+                bufferView=len(self.gltf.bufferViews),
+                componentType=pygltflib.FLOAT,
+                count=len(key_point_scales),
+                type=pygltflib.VEC3,
+                max=key_point_scales.max(axis=0).tolist(),
+                min=key_point_scales.min(axis=0).tolist(),
+            )
+        )
+
+        # add blob
+        self.gltf.bufferViews.append(
+            pygltflib.BufferView(
+                buffer=0,
+                byteOffset=len(self.data),
+                byteLength=len(blob),
+                target=pygltflib.ARRAY_BUFFER,
+            )
+        )
+
+        self.data += blob
+
+        # create animation object
+        self.gltf.animations.append(
+            pygltflib.Animation(
+                name=f"{frame_id}",
+                samplers=[
+                    pygltflib.AnimationSampler(
+                        input=times_accessor_index,
+                        output=scales_accessor_index,
+                        interpolation=pygltflib.ANIM_STEP
+                    )
+                ],
+                channels=[
+                    pygltflib.AnimationChannel(
+                        sampler=0,
+                        target=pygltflib.AnimationChannelTarget(
+                            node=node_index,
+                            path="scale"
+                        )
+                    )
+                ]
+            )
+        )

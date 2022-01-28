@@ -4,13 +4,13 @@ from typing import Optional
 import cv2
 import numpy as np
 import pygltflib as pygltflib
-from open3d.cpu.pybind.geometry import TriangleMesh
 from tqdm import tqdm
+import open3d as o3d
 
 from volumesh.GLTFMeshSequence import GLTFMeshSequence
 
 
-def create_volumesh(meshes: [TriangleMesh],
+def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
                     names: [str] = None,
                     compressed: bool = False,
                     jpeg_textures: bool = False,

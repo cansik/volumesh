@@ -18,7 +18,7 @@ def parse_arguments():
     a.add_argument("--animate", action='store_true', help="Animate mesh frames with GLTF animation system.")
     a.add_argument("--fps", type=int, default=24, help="Animation frames per second (fps).")
     a.add_argument("-tex", "--texture-size", type=int, default=None, help="Resize texture to the specified width.")
-    a.add_argument("--load_safe", action='store_true', help="Load meshes slow but save.")
+    a.add_argument("--load-safe", action='store_true', help="Load meshes slow but save.")
     args = a.parse_args()
     args.output = os.path.abspath(args.output)
     return args

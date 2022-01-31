@@ -22,7 +22,7 @@ The following information will be stored into the mesh if available:
 * triangle indices
 * normals
 * vertex-uvs
-* textures (PNG format)
+* textures (png / jpeg)
 
 ### Limitations
 If draco compression is turned on, only **vertex** and **triangle** information is stored into the mesh. This is due to the fact that [DracoPy](https://github.com/seung-lab/DracoPy) does only support these two primitive values. At the moment we recommend to not use the internal compression, but convert the sequence into a glb file and later convert it using the [gltf-pipeline](https://github.com/CesiumGS/gltf-pipeline). This leads to way better compression and contains still all information parts:
@@ -62,6 +62,6 @@ optional arguments:
 ```
 
 ## About
-Copyright (c) 2021 Zurich University of the Arts ZHdK
+Copyright (c) 2022 Zurich University of the Arts ZHdK
 
 ![ZHdK Logo](https://lh4.googleusercontent.com/-7NafHJ8zrlE/AAAAAAAAAAI/AAAAAAAAAAA/x4MYabXKMVQ/s88-p-k-no-ns-nd/photo.jpg)

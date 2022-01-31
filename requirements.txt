@@ -3,7 +3,8 @@ open3d==0.14.1
 tqdm
 numpy
 setuptools
-pygltflib
 DracoPy
 Pillow
 opencv-python
+
+git+https://gitlab.com/cansik/pygltflib.git@save-perfromance

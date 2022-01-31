@@ -10,6 +10,10 @@ import open3d as o3d
 from volumesh.GLTFMeshSequence import GLTFMeshSequence
 
 
+class BinaryLengthOverflowException(Exception):
+    pass
+
+
 def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
                     names: [str] = None,
                     compressed: bool = False,
@@ -27,8 +31,11 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
         for i, mesh in enumerate(meshes):
             name = os.path.basename(names[i])
 
+            # default arguments
             points = np.float32(np.asarray(mesh.vertices))
             triangles = np.uint32(np.asarray(mesh.triangles))
+
+            # optional arguments
             colors = np.float32(np.asarray(mesh.vertex_colors))
 
             # necessary to be GLTF compliant
@@ -37,7 +44,7 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
 
             # convert triangle_uvs into vertex_uvs
             triangle_uvs = np.float32(np.asarray(mesh.triangle_uvs))
-            vertex_uvs = _calculate_vertex_uvs(triangles, triangle_uvs)
+            vertex_uvs = _calculate_vertex_uvs(triangles, triangle_uvs) if len(triangle_uvs) > 0 else None
 
             textures = [np.asarray(tex) for tex in mesh.textures if not tex.is_empty()]
             texture = textures[0] if len(textures) > 0 else None
@@ -49,6 +56,9 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
             sequence.append_mesh(points, triangles, colors, normals, vertex_uvs, texture,
                                  name=name, compressed=compressed, jpeg_textures=jpeg_textures)
             prog.update()
+
+    if len(sequence.data) >= pow(2, 32) - 1:
+        raise BinaryLengthOverflowException(f"Data size is too large for GLB standard ({len(sequence.data)} bytes).")
 
     gltf = sequence.pack()
     return gltf

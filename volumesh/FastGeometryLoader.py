@@ -1,11 +1,11 @@
 import multiprocessing
+import platform
 from functools import partial
-from multiprocessing import Pool
 from multiprocessing.pool import ThreadPool
 from typing import Callable, Optional
 
-import open3d as o3d
 import numpy as np
+import open3d as o3d
 from tqdm import tqdm
 
 ProcessMeshMethod = Optional[Callable[[o3d.geometry.TriangleMesh], o3d.geometry.TriangleMesh]]
@@ -79,7 +79,8 @@ def load_geometries(files: [str]) -> [o3d.geometry.TriangleMesh]:
 def load_meshes_fast(files: [str], post_processing: bool = False,
                      process_mesh: ProcessMeshMethod = None) -> [o3d.geometry.TriangleMesh]:
     meshes = []
-    with Pool(processes=min(multiprocessing.cpu_count(), len(files))) as pool:
+    ctx = multiprocessing.get_context("spawn") if platform.system() == "Linux" else multiprocessing
+    with ctx.Pool(processes=min(multiprocessing.cpu_count(), len(files))) as pool:
         method = partial(_load_mesh_data, post_processing=post_processing, process_mesh=process_mesh)
         for result in tqdm(pool.imap(method, files), total=len(files), desc="mesh loading"):
             meshes.append(result)
@@ -114,7 +115,8 @@ def _load_pointcloud_data(file: str) -> _PointCloudTransmissionFormat:
 
 def load_pointclouds_fast(files: [str]) -> [o3d.geometry.PointCloud]:
     clouds = []
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
+    ctx = multiprocessing.get_context("spawn") if platform.system() == "Linux" else multiprocessing
+    with ctx.Pool(processes=multiprocessing.cpu_count()) as pool:
         for result in tqdm(pool.imap(_load_pointcloud_data, files), total=len(files), desc="pointcloud loading"):
             clouds.append(result)
     return [cloud.create_pointcloud() for cloud in clouds]

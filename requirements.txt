@@ -7,4 +7,4 @@ DracoPy
 Pillow
 opencv-python
 
-git+https://gitlab.com/cansik/pygltflib.git@save-perfromance
+pygltflib @ git+https://gitlab.com/cansik/pygltflib.git@save-perfromance

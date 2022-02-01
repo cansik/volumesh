@@ -49,7 +49,7 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
             textures = [np.asarray(tex) for tex in mesh.textures if not tex.is_empty()]
             texture = textures[0] if len(textures) > 0 else None
 
-            if texture_size is not None:
+            if texture_size is not None and texture is not None:
                 h, w = texture.shape[:2]
                 texture = cv2.resize(texture, (0, 0), fx=texture_size / w, fy=texture_size / w)
 

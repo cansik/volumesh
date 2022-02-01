@@ -134,7 +134,6 @@ class GLTFMeshSequence:
                 self._add_vector_data(colors)
 
             if normals is not None and len(normals) > 0:
-                # todo: normalize normals first!
                 attributes.NORMAL = len(self.gltf.accessors)
                 self._add_vector_data(normals)
 
@@ -146,8 +145,6 @@ class GLTFMeshSequence:
                 texture_encoding = "JPEG" if jpeg_textures else "PNG"
 
                 # add image data
-                # todo: create buffer view for it and append to buffer
-                # todo: check power of 2 for texture dimension => already during creation
                 texture_id = len(self.gltf.textures)
                 pil_image = PIL.Image.fromarray(texture).convert('RGB')
                 image = pygltflib.Image()

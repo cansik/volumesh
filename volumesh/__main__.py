@@ -50,9 +50,9 @@ def main():
         process_method = pre_process_mesh
 
     if args.load_safe:
-        meshes = load_meshes_safe(files, post_processing=True, process_mesh=process_method)
+        meshes = load_meshes_safe(files, post_processing=False, process_mesh=process_method)
     else:
-        meshes = load_meshes_fast(files, post_processing=True, process_mesh=process_method)
+        meshes = load_meshes_fast(files, post_processing=False, process_mesh=process_method)
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed,

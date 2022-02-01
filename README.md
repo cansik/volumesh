@@ -4,7 +4,7 @@ Utility to create volumetric mesh container files.
 ## Installation
 
 ```
-pip install git+https://github.com/cansik/volumesh.git@1.2.3
+pip install git+https://github.com/cansik/volumesh.git@1.2.4
 ```
 
 ## Usage

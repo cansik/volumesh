@@ -1,11 +1,10 @@
 from typing import Optional
 
 import DracoPy
-import PIL.Image
 import numpy as np
 import pygltflib
 
-from volumesh.utils import pil_to_data_uri
+from volumesh.utils import create_data_uri
 
 DRACO_EXTENSION = "KHR_draco_mesh_compression"
 
@@ -51,7 +50,8 @@ class GLTFMeshSequence:
                     texture: Optional[np.ndarray] = None,
                     name: str = None,
                     compressed: bool = False,
-                    jpeg_textures: bool = False):
+                    jpeg_textures: bool = False,
+                    jpeg_quality: int = 95):
         """
         Adds a mesh to the GLTF Sequence.
         :param points: Float32 Numpy Array (n, 3)
@@ -146,9 +146,8 @@ class GLTFMeshSequence:
 
                 # add image data
                 texture_id = len(self.gltf.textures)
-                pil_image = PIL.Image.fromarray(texture).convert('RGB')
                 image = pygltflib.Image()
-                image.uri = pil_to_data_uri(pil_image, texture_encoding)
+                image.uri = create_data_uri(texture, texture_encoding, jpeg_quality)
                 image.name = f"tex_{texture_id:05d}.{texture_encoding.lower()}"
                 self.gltf.images.append(image)
 

@@ -1,10 +1,8 @@
 wheel
-open3d==0.14.1
+open3d>=0.14.1
 tqdm
 numpy
 setuptools
 DracoPy
-Pillow
 opencv-python
-
-pygltflib @ git+https://gitlab.com/cansik/pygltflib.git@save-perfromance
+pygltflib>=1.15.1

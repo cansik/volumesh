@@ -11,26 +11,19 @@ from volumesh.utils import get_meshes_in_path
 
 def parse_arguments():
     a = argparse.ArgumentParser(prog="volumesh",
-                                description="A utility to work with volumesh files.")
-    a.add_argument("input", help="Path to the mesh files (directory).")
-    a.add_argument("output", help="GLTF output file (file).")
-    a.add_argument("--compressed", action='store_true', help="Compress the mesh data.")
+                                description="A utility to create volumesh files.")
+    a.add_argument("input", help="Path to the mesh (*.obj) files (directory).")
+    a.add_argument("output", help="GLTF output file (.glb).")
+    a.add_argument("--compressed", action='store_true', help="Compress the mesh data with Draco compression.")
     a.add_argument("--jpeg-textures", action='store_true', help="Use JPEG compression for textures instead of PNG.")
+    a.add_argument("--jpeg-quality", type=int, default=95, help="JPEG quality parameter.")
     a.add_argument("--animate", action='store_true', help="Animate mesh frames with GLTF animation system.")
     a.add_argument("--fps", type=int, default=24, help="Animation frames per second (fps).")
-    a.add_argument("-tex", "--texture-size", type=int, default=None, help="Resize texture to the specified width.")
+    a.add_argument("-tex", "--texture-size", type=int, default=None, help="Limit texture size to the specified width.")
     a.add_argument("--load-safe", action='store_true', help="Load meshes slow but save.")
-    a.add_argument("--simplify", action='store_true', help="Simplify the mesh to reduce file size.")
     args = a.parse_args()
     args.output = os.path.abspath(args.output)
     return args
-
-
-def pre_process_mesh(mesh: o3d.geometry.TriangleMesh) -> o3d.geometry.TriangleMesh:
-    mesh = mesh.simplify_vertex_clustering(
-        voxel_size=9.731187e-03,
-        contraction=o3d.geometry.SimplificationContraction.Average)
-    return mesh
 
 
 def main():
@@ -46,8 +39,6 @@ def main():
     names = [os.path.splitext(file)[0] for file in files]
 
     process_method = None
-    if args.simplify:
-        process_method = pre_process_mesh
 
     if args.load_safe:
         meshes = load_meshes_safe(files, post_processing=False, process_mesh=process_method)
@@ -56,7 +47,8 @@ def main():
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed,
-                           jpeg_textures=args.jpeg_textures, texture_size=args.texture_size,
+                           jpeg_textures=args.jpeg_textures, jpeg_quality=args.jpeg_queality,
+                           texture_size=args.texture_size,
                            animate=args.animate, frame_rate=args.fps)
 
     # save to disk

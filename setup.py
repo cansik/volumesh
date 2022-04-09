@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
     name=NAME,
-    version='1.2.4',
+    version='1.2.5',
     packages=required_packages,
     entry_points={
         'console_scripts': [
@@ -20,6 +20,6 @@ setup(
     license='MIT License',
     author='Florian Bruggisser',
     author_email='github@broox.ch',
-    description='A utility to work with volumesh files.',
+    description='A utility to create volumesh files.',
     install_requires=required,
 )

@@ -18,6 +18,7 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
                     names: [str] = None,
                     compressed: bool = False,
                     jpeg_textures: bool = False,
+                    jpeg_quality: int = 95,
                     texture_size: Optional[int] = None,
                     animate: bool = False,
                     frame_rate: int = 24
@@ -51,10 +52,13 @@ def create_volumesh(meshes: [o3d.geometry.TriangleMesh],
 
             if texture_size is not None and texture is not None:
                 h, w = texture.shape[:2]
-                texture = cv2.resize(texture, (0, 0), fx=texture_size / w, fy=texture_size / w)
+
+                if h > texture_size or w > texture_size:
+                    texture = cv2.resize(texture, (0, 0), fx=texture_size / w, fy=texture_size / w)
 
             sequence.append_mesh(points, triangles, colors, normals, vertex_uvs, texture,
-                                 name=name, compressed=compressed, jpeg_textures=jpeg_textures)
+                                 name=name, compressed=compressed,
+                                 jpeg_textures=jpeg_textures, jpeg_quality=jpeg_quality)
             prog.update()
 
     if len(sequence.data) >= pow(2, 32) - 1:

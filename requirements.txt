@@ -2,7 +2,8 @@ wheel
 open3d>=0.14.1
 tqdm
 numpy
-setuptools
-DracoPy
 opencv-python
 pygltflib>=1.15.1
+
+# extra draco
+DracoPy>=1.1.0

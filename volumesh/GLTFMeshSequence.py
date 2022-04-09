@@ -1,6 +1,5 @@
 from typing import Optional
 
-import DracoPy
 import numpy as np
 import pygltflib
 
@@ -212,6 +211,8 @@ class GLTFMeshSequence:
         self.data += array_blob
 
     def _add_data_compressed(self, points: np.array, triangles: np.array):
+        import DracoPy
+
         # encode data
         encoded_triangles = np.asarray(triangles).flatten()
         encoded_points = np.asarray(points).flatten()
@@ -224,6 +225,7 @@ class GLTFMeshSequence:
 
         # ugly hack to get point size back
         # todo: make this more performant
+        # version 1.1.0 adds create_metadata attribute
         decoded = DracoPy.decode_buffer_to_mesh(encoded_blob)
         triangles_size = len(decoded.faces)
         pts_size = int(len(decoded.points) / 3)

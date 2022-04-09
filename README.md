@@ -4,7 +4,14 @@ Utility to create volumetric mesh container files.
 ## Installation
 
 ```
-pip install git+https://github.com/cansik/volumesh.git@1.2.4
+pip install git+https://github.com/cansik/volumesh.git@1.2.5
+```
+
+### Draco Compression
+To install the draco compression the DracoPy library is needed. Because it is still under development, we just include it if the [extra](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-setuptools-extras) `draco` is specified.
+
+```
+pip install "git+https://github.com/cansik/volumesh.git@1.2.5[draco]"
 ```
 
 ## Usage
@@ -12,10 +19,10 @@ pip install git+https://github.com/cansik/volumesh.git@1.2.4
 To convert a sequence of OBJ files into a volumesh container use the following command:
 
 ```bash
-volumesh ./human test.glb --compressed
+volumesh ./human test.glb
 ```
 
-First specify the folder where the OBJ's are located (`human`) and then the output file (`test.glb`). Use the compressed flag if you want to compress the container.
+First specify the folder where the OBJ's are located (`human`) and then the output file (`test.glb`). Use the `--compressed` flag if you have `draco` extras installed and want to compress the container.
 The following information will be stored into the mesh if available:
 
 * vertices

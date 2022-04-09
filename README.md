@@ -8,7 +8,7 @@ pip install git+https://github.com/cansik/volumesh.git@1.2.5
 ```
 
 ### Draco Compression
-To install the draco compression the DracoPy library is needed. Because it is still under development, we just include it if the [extra](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-setuptools-extras) `draco` is specified.
+To install the [Google Draco](https://google.github.io/draco/) compression the [DracoPy](https://github.com/seung-lab/DracoPy) library is needed. Because it is still under development, we just include it if the [extra](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-setuptools-extras) `draco` is specified.
 
 ```
 pip install "git+https://github.com/cansik/volumesh.git@1.2.5[draco]"

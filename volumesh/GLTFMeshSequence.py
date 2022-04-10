@@ -220,16 +220,14 @@ class GLTFMeshSequence:
         encoded_triangles = np.asarray(triangles).flatten()
         encoded_points = np.asarray(points).flatten()
 
-        result = DracoPy.encode_mesh_to_buffer(encoded_points,
-                                               encoded_triangles,
-                                               compression_level=10)
+        result = DracoPy.encode(encoded_points, faces=encoded_triangles, compression_level=10)
 
         encoded_blob = bytearray(result)
 
         # ugly hack to get point size back
         # todo: make this more performant
         # version 1.1.0 adds create_metadata attribute
-        decoded = DracoPy.decode_buffer_to_mesh(encoded_blob)
+        decoded = DracoPy.decode(bytes(encoded_blob))
         triangles_size = len(decoded.faces)
         pts_size = int(len(decoded.points) / 3)
 

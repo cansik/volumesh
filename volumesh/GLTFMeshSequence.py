@@ -211,7 +211,10 @@ class GLTFMeshSequence:
         self.data += array_blob
 
     def _add_data_compressed(self, points: np.array, triangles: np.array):
-        import DracoPy
+        try:
+            import DracoPy
+        except ImportError:
+            raise Exception("Please install extra DracoPy to use compression.")
 
         # encode data
         encoded_triangles = np.asarray(triangles).flatten()

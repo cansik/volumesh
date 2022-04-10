@@ -24,6 +24,8 @@ def create_data_uri(image: np.ndarray, image_format: str = "PNG", jpeg_quality: 
 
     encode_format = ".jpg" if image_format == "JPEG" else ".png"
 
-    _, encoded_image = cv2.imencode(encode_format, image, encode_param)
+    rgb_texture = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    _, encoded_image = cv2.imencode(encode_format, rgb_texture, encode_param)
     data64 = base64.b64encode(encoded_image)
     return u'data:image/' + image_format.lower() + ';base64,' + data64.decode('utf-8')

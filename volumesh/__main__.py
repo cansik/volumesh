@@ -47,7 +47,7 @@ def main():
 
     # create gltf
     gltf = create_volumesh(meshes, names, compressed=args.compressed,
-                           jpeg_textures=args.jpeg_textures, jpeg_quality=args.jpeg_queality,
+                           jpeg_textures=args.jpeg_textures, jpeg_quality=args.jpeg_quality,
                            texture_size=args.texture_size,
                            animate=args.animate, frame_rate=args.fps)
 

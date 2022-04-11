@@ -50,7 +50,7 @@ class GLTFMeshSequence:
                     name: str = None,
                     compressed: bool = False,
                     jpeg_textures: bool = False,
-                    jpeg_quality: int = 95):
+                    jpeg_quality: int = 75):
         """
         Adds a mesh to the GLTF Sequence.
         :param points: Float32 Numpy Array (n, 3)
@@ -62,6 +62,7 @@ class GLTFMeshSequence:
         :param name: Optional name for the mesh
         :param compressed: Compress the mesh data before adding to the buffer
         :param jpeg_textures: Use JPEG compression for textures, otherwise PNG
+        :param jpeg_quality: Defines JPEG compression quality (higher = better)
         :return: None
         """
 

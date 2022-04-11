@@ -15,7 +15,7 @@ def get_meshes_in_path(path: str, format: str = "*.obj") -> [str]:
     return [os.path.abspath(p) for p in files]
 
 
-def create_data_uri(image: np.ndarray, image_format: str = "PNG", jpeg_quality: int = 95):
+def create_data_uri(image: np.ndarray, image_format: str = "PNG", jpeg_quality: int = 75):
     # converts numpy image to data URI
     encode_param = []
 

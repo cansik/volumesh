@@ -16,7 +16,7 @@ def parse_arguments():
     a.add_argument("output", help="GLTF output file (.glb).")
     a.add_argument("--compressed", action='store_true', help="Compress the mesh data with Draco compression.")
     a.add_argument("--jpeg-textures", action='store_true', help="Use JPEG compression for textures instead of PNG.")
-    a.add_argument("--jpeg-quality", type=int, default=95, help="JPEG quality parameter.")
+    a.add_argument("--jpeg-quality", type=int, default=75, help="JPEG quality parameter.")
     a.add_argument("--animate", action='store_true', help="Animate mesh frames with GLTF animation system.")
     a.add_argument("--fps", type=int, default=24, help="Animation frames per second (fps).")
     a.add_argument("-tex", "--texture-size", type=int, default=None, help="Limit texture size to the specified width.")

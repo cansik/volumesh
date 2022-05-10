@@ -56,7 +56,7 @@ long_description = (current_dir / "README.md").read_text()
 
 setup(
     name="volumesh",
-    version='1.2.5',
+    version='1.2.5.1',
     packages=required_packages,
     entry_points={
         'console_scripts': [
@@ -64,7 +64,7 @@ setup(
         ],
       },
     url='https://github.com/cansik/mesh-sequence-player',
-    license='MIT License',
+    # license='MIT License',
     author='Florian Bruggisser',
     author_email='github@broox.ch',
     description='A utility to create volumesh files.',

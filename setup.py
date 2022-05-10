@@ -63,7 +63,7 @@ setup(
           'volumesh = volumesh.__main__:main',
         ],
       },
-    url='https://github.com/cansik/mesh-sequence-player',
+    url='https://github.com/cansik/volumesh',
     # license='MIT License',
     author='Florian Bruggisser',
     author_email='github@broox.ch',

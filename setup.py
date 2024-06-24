@@ -12,7 +12,7 @@ ALL_NAME = "all"
 def parse_requirements():
     extras = {}
 
-    with open('requirements.txt') as f:
+    with open("requirements.txt") as f:
         lines = f.read().splitlines()
 
     extra_name = BASE_NAME
@@ -56,18 +56,18 @@ long_description = (current_dir / "README.md").read_text()
 
 setup(
     name="volumesh",
-    version='1.2.5.1',
+    version="1.3.0",
     packages=required_packages,
     entry_points={
-        'console_scripts': [
-          'volumesh = volumesh.__main__:main',
+        "console_scripts": [
+            "volumesh = volumesh.__main__:main",
         ],
-      },
-    url='https://github.com/cansik/volumesh',
-    # license='MIT License',
-    author='Florian Bruggisser',
-    author_email='github@broox.ch',
-    description='A utility to create volumesh files.',
+    },
+    url="https://github.com/cansik/volumesh",
+    # license="MIT License",
+    author="Florian Bruggisser",
+    author_email="github@broox.ch",
+    description="A utility to create volumesh files.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=install_required,

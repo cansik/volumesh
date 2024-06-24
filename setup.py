@@ -67,7 +67,7 @@ setup(
     # license="MIT License",
     author="Florian Bruggisser",
     author_email="github@broox.ch",
-    description="A utility to create volumesh files.",
+    description="Utility for creating volumetric mesh container files in glTF format.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=install_required,

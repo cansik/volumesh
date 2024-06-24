@@ -173,8 +173,8 @@ class GLTFMeshSequence:
                 componentType=pygltflib.UNSIGNED_INT,
                 count=triangles.size,
                 type=pygltflib.SCALAR,
-                max=[int(triangles.max())],
-                min=[int(triangles.min())],
+                max=[int(triangles.max()) if len(triangles) > 0 else 0],
+                min=[int(triangles.min()) if len(triangles) > 0 else 0],
             )
         )
         self.gltf.bufferViews.append(
@@ -197,8 +197,8 @@ class GLTFMeshSequence:
                 componentType=component_type,
                 count=len(array),
                 type=type,
-                max=array.max(axis=0).tolist(),
-                min=array.min(axis=0).tolist(),
+                max=array.max(axis=0).tolist() if len(array) > 0 else [0, 0, 0],
+                min=array.min(axis=0).tolist() if len(array) > 0 else [0, 0, 0],
             )
         )
         self.gltf.bufferViews.append(
@@ -243,8 +243,8 @@ class GLTFMeshSequence:
                 componentType=pygltflib.UNSIGNED_INT,
                 count=triangles_size,
                 type=pygltflib.SCALAR,
-                max=[int(triangles.max())],
-                min=[int(triangles.min())],
+                max=[int(triangles.max()) if len(triangles) > 0 else 0],
+                min=[int(triangles.min()) if len(triangles) > 0 else 0],
             )
         )
 

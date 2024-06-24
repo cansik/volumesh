@@ -1,8 +1,10 @@
 *.obj
 venv
+.venv
 *.pyc
 .idea
 volumesh.egg-info
 demo
 dist
 build
+.DS_Store

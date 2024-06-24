@@ -215,13 +215,17 @@ class GLTFMeshSequence:
         try:
             import DracoPy
         except ImportError:
-            raise Exception("Please install extra DracoPy to use compression.")
+            raise Exception("Please install extra 'draco' (DracoPy) to use compression.")
 
         # encode data
         encoded_triangles = np.asarray(triangles).flatten()
         encoded_points = np.asarray(points).flatten()
 
-        result = DracoPy.encode(encoded_points, faces=encoded_triangles, compression_level=10)
+        if len(encoded_points) == 0 and len(encoded_triangles) == 0:
+            return
+
+        result = DracoPy.encode(encoded_points, compression_level=10,
+                                faces=encoded_triangles, colors=None, tex_coord=None)
 
         encoded_blob = bytearray(result)
 

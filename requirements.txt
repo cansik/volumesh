@@ -1,7 +1,7 @@
 wheel
 open3d~=0.18.0
 tqdm
-numpy
+numpy~=1.0
 opencv-python
 pygltflib~=1.16.2
 

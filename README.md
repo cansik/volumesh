@@ -12,7 +12,7 @@ pip install volumesh
 ```
 
 ### Draco Compression
-To install the [Google Draco](https://google.github.io/draco/) compression the [DracoPy](https://github.com/seung-lab/DracoPy) library is needed. Because it is still under development, we just include it if the [extra](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-setuptools-extras) `draco` is specified.
+To install the [Google Draco](https://google.github.io/draco/) compression, the [DracoPy](https://github.com/seung-lab/DracoPy) library is required. As it is still under development, we only include it when the [extra](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-setuptools-extras) `draco` is specified.
 
 ```
 pip install "volumesh[draco]"
@@ -26,8 +26,8 @@ To convert a sequence of OBJ files into a volumesh container use the following c
 volumesh ./data test.glb
 ```
 
-First specify the folder where the OBJ's are located (`data`) and then the output file (`test.glb`). Use the `--compressed` flag if you have `draco` extras installed and want to compress the container.
-The following information will be stored into the mesh if available:
+First specify the folder where the OBJs are located (`data`) and then the output file (`test.glb`). Use the `--compressed` flag if you have `draco` extras installed and want to compress the container.
+The following information is stored in the mesh, if available::
 
 * vertices
 * triangle indices
@@ -36,14 +36,14 @@ The following information will be stored into the mesh if available:
 * textures (png / jpeg)
 
 ### Limitations
-If draco compression is turned on, only **vertex** and **triangle** information is stored into the mesh. This is due to the fact that [DracoPy](https://github.com/seung-lab/DracoPy) does only support these two primitive values. At the moment we recommend to not use the internal compression, but convert the sequence into a glb file and later convert it using the [gltf-pipeline](https://github.com/CesiumGS/gltf-pipeline). This leads to way better compression and contains still all information parts:
+When Draco compression is enabled, only **vertex** and **triangle** information is stored in the mesh. This is due to the fact that [DracoPy](https://github.com/seung-lab/DracoPy) only supports these two primitives. At the moment we recommend not to use the internal compression, but to convert the sequence to a glb file and convert it later with the [gltf-pipeline](https://github.com/CesiumGS/gltf-pipeline). This gives a much better compression and still contains all the information:
 
 ```
 gltf-pipeline -i .\sequence.glb -o .\sequence-draco.glb -d
 ```
 
 ### Animation
-To use the GLTF animation system to render the meshes in a sequence, it is possible to specify the framerate (default `24`) and set the animation flag. Volumesh will add an animation track which hides and shows the objects after each other using the glTF animation tools.
+To use the GLTF animation system to render the meshes in a sequence, it is possible to specify the frame rate (default `24`) and set the animation flag. Volumesh will add an animation track that will fade the objects in and out using the GLTF animation tools.
 
 ```
 volumesh ./human test.glb --animate --fps 24

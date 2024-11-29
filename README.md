@@ -77,6 +77,4 @@ options:
 ```
 
 ## About
-Copyright (c) 2024 Zurich University of the Arts ZHdK
-
-![ZHdK Logo](https://lh4.googleusercontent.com/-7NafHJ8zrlE/AAAAAAAAAAI/AAAAAAAAAAA/x4MYabXKMVQ/s88-p-k-no-ns-nd/photo.jpg)
+Copyright (c) 2024 Florian Bruggisser

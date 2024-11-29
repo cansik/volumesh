@@ -64,7 +64,7 @@ setup(
         ],
     },
     url="https://github.com/cansik/volumesh",
-    # license="MIT License",
+    license="MIT License",
     author="Florian Bruggisser",
     author_email="github@broox.ch",
     description="Utility for creating volumetric mesh container files in glTF format.",

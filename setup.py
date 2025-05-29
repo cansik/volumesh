@@ -56,7 +56,7 @@ long_description = (current_dir / "README.md").read_text()
 
 setup(
     name="volumesh",
-    version="1.3.0",
+    version="1.4.0",
     packages=required_packages,
     entry_points={
         "console_scripts": [

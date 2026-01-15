@@ -76,5 +76,8 @@ options:
   --load-safe           Load meshes slow but save.
 ```
 
-## About
-Copyright (c) 2024 Florian Bruggisser
+## Credits
+
+Developed at the [Immersive Arts Space](https://blog.zhdk.ch/immersivearts/), [Zurich University of the Arts (ZHdK)](https://www.zhdk.ch/).
+
+Copyright © Zurich University of the Arts (ZHdK).

@@ -1,4 +1,4 @@
-# Volumesh
+# Volumesh [![PyPI](https://img.shields.io/pypi/v/volumesh)](https://pypi.org/project/volumesh/)
 Utility for creating volumetric mesh container files in glTF format.
 
 [![Hypergrid](media/hypergrid.gif)](https://easyguet.ch/ias/volumesh-viewer/?model=hypergrid)

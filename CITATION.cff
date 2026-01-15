@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "volumesh"
+authors:
+  - family-names: "Bruggisser"
+    given-names: "Florian"
+    orcid: "https://orcid.org/0009-0003-0645-6746"
+    affiliation: "Zurich University of the Arts (ZHdK)"
+type: software
+version: "1.4.0"
+date-released: "2025-05-29"
+url: "https://github.com/cansik/volumesh"
+repository-code: "https://github.com/cansik/volumesh"
+license: "MIT"
+keywords:
+  - python
+  - gltf
+  - volumetric
+  - mesh
+  - animation
+  - volumetric-video

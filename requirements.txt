@@ -1,9 +1,8 @@
 wheel
 open3d~=0.19
 tqdm
-numpy~=1.0
 opencv-python
-pygltflib~=1.16.2
+pygltflib~=1.16.5
 
 # extra draco
 DracoPy~=1.5.0
